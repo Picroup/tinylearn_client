@@ -17,7 +17,7 @@ class AppProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<Configuration>.value(value: dev),
+        Provider<Configuration>.value(value: configuration),
         Provider<MiniStorage>(create: (context) => MiniStorage()),
         Provider<ModelRequest>(
           create: (context) {
