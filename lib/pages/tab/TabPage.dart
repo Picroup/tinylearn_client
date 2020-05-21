@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tinylearn_client/app/AppViewModel.dart';
+import 'package:tinylearn_client/pages/home/HomePage.dart';
+import 'package:tinylearn_client/pages/login/LoginPage.dart';
+import 'package:provider/provider.dart';
 
 class TabPage extends StatefulWidget {
 
@@ -26,7 +30,7 @@ class _TabState extends State<TabPage> {
 
   @override
   void initState() {
-    _currentIndex = 0;
+    _currentIndex = 1;
     _pageController = PageController(
       initialPage: _currentIndex,
     );
@@ -36,18 +40,31 @@ class _TabState extends State<TabPage> {
 
   void _onTapTab(int index) {
     final item = _items[index];
-    if (item.key == 'add') return;
+    final AppViewModel appViewModel = context.read();
+    if (!appViewModel.isLogin && item.key != 'search') {
+      this._routeToLogin();
+      return;
+    }
     setState(() {
       _currentIndex = index;
     });
     _pageController.jumpToPage(index);
   }
 
+  void _routeToLogin() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => LoginPage()
+      )
+    );
+  }
+
   List<_Item> createItems() {
     return [
       _Item(
         key: 'home',
-        widget: Container(color: Colors.orange),
+        widget: HomePage(title: '首页'),
         barItem: BottomNavigationBarItem(
           icon: Icon(Icons.home),
           title: Text('首页'),
@@ -59,14 +76,6 @@ class _TabState extends State<TabPage> {
         barItem: BottomNavigationBarItem(
           icon: Icon(Icons.search),
           title: Text('搜索'),
-        )
-      ),
-      _Item(
-        key: 'add',
-        widget: Container(),
-        barItem: BottomNavigationBarItem(
-          icon: Icon(Icons.add_circle_outline),
-          title: Text('发布'),
         )
       ),
       _Item(
@@ -90,6 +99,8 @@ class _TabState extends State<TabPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isSessionInfoInit = context.select<AppViewModel, bool>((viewModel) => viewModel.isSessionInfoInit);
+    if (!isSessionInfoInit) return Container(color: Theme.of(context).scaffoldBackgroundColor);
     return Scaffold(
       body: PageView(
         controller: _pageController,

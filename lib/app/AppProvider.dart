@@ -1,11 +1,14 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:tinylearn_client/app/AppViewModel.dart';
 import 'package:tinylearn_client/app/Configuration.dart';
 import 'package:tinylearn_client/functional/graphql/ModelRequest.dart';
 import 'package:tinylearn_client/functional/graphql/createModelRequest.dart';
 import 'package:tinylearn_client/functional/networking/PostService/GraphQLPostService.dart';
 import 'package:tinylearn_client/functional/networking/PostService/PostService.dart';
+import 'package:tinylearn_client/functional/networking/UserService/GraphQLUserService.dart';
+import 'package:tinylearn_client/functional/networking/UserService/UserService.dart';
 import 'package:tinylearn_client/functional/storage/MiniStorage.dart';
 
 class AppProvider extends StatelessWidget {
@@ -33,6 +36,22 @@ class AppProvider extends StatelessWidget {
           create: (context) {
             final ModelRequest modelRequest = context.read();
             return GraphQLPostService(modelRequest);
+          }
+        ),
+        Provider<UserService>(
+          create: (context) {
+            final ModelRequest modelRequest = context.read();
+            return GraphQLUserService(modelRequest);
+          }
+        ),
+        ChangeNotifierProvider<AppViewModel>(
+          create: (context) {
+            final MiniStorage storage = context.read();
+            final AppViewModel appViewModel = AppViewModel(
+              getSessionInfo: ()  => storage.sessionInfo,
+              setSessionInfo: (value) => storage.setSessionInfo(value),
+            )..initSessionInfo();
+            return appViewModel;
           }
         ),
       ],
