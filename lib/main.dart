@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/app/AppProvider.dart';
+import 'package:tinylearn_client/pages/tab/TabPage.dart';
 import 'functional/graphql/errorMessage.dart';
 import 'functional/networking/PostService/PostService.dart';
 import 'functional/fundation/int_time.dart';
@@ -18,10 +19,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.orange,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        home: TabPage()
+        // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }
