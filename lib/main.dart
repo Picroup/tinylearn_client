@@ -29,6 +29,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+final _uri = 'http://10.0.0.105:4444/';
+
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<PostsData> _postsData;
@@ -43,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     
     final client = GraphQLClient(
       cache: InMemoryCache(),
-      link: HttpLink(uri: 'http://10.0.0.105:4444/')
+      link: HttpLink(uri: _uri)
     );
     
     final result = await client.query(QueryOptions(
@@ -64,9 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: buildAppBar(),
       body: Center(
         child: FutureBuilder<PostsData>(
           future: _postsData,
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               return buildListView(context, snapshot);
             }
             if (snapshot.hasError) {
-              return Text('${snapshot.error}');
+              return Text('${snapshot.error}', textAlign: TextAlign.center);
             }
             return CircularProgressIndicator();
           },
@@ -84,11 +84,18 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  AppBar buildAppBar() {
+    return AppBar(
+      title: Text(widget.title),
+    );
+  }
+
   ListView buildListView(BuildContext context, AsyncSnapshot<PostsData> snapshot) {
-    return ListView(
-      children: snapshot.data.posts
-        .map(postTile)
-        .toList(),
+    final posts = snapshot.data.posts;
+    return ListView.separated(
+      itemCount: posts.length,
+      itemBuilder: (_, index) => postTile(snapshot.data.posts[index]),
+      separatorBuilder: (_, __) => Divider(), 
     );
   }
 
