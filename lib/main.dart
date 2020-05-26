@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tinylearn_client/PostsData.dart';
@@ -37,17 +38,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _postsData = _createPostsData();
-    super.initState();
-  }
 
-  Future<PostsData> _createPostsData() async {
-    
     final client = GraphQLClient(
       cache: InMemoryCache(),
       link: HttpLink(uri: _uri)
     );
-    
+
+    _postsData = _createPostsData(client);
+    super.initState();
+  }
+
+  Future<PostsData> _createPostsData(GraphQLClient client) async {
+        
     final result = await client.query(QueryOptions(
       documentNode: gql(r'''
         query {
@@ -66,13 +68,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
       body: Center(
         child: FutureBuilder<PostsData>(
           future: _postsData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return buildListView(context, snapshot);
+              final List<Post> posts = snapshot.data.posts;
+              return _buildListView(posts);
             }
             if (snapshot.hasError) {
               return Text('${snapshot.error}', textAlign: TextAlign.center);
@@ -80,33 +85,30 @@ class _MyHomePageState extends State<MyHomePage> {
             return CircularProgressIndicator();
           },
         ),
-      )
+      ),
     );
   }
 
-  AppBar buildAppBar() {
-    return AppBar(
-      title: Text(widget.title),
-    );
-  }
-
-  ListView buildListView(BuildContext context, AsyncSnapshot<PostsData> snapshot) {
-    final posts = snapshot.data.posts;
+  ListView _buildListView(List<Post> posts) {
     return ListView.separated(
       itemCount: posts.length,
-      itemBuilder: (_, index) => postTile(snapshot.data.posts[index]),
-      separatorBuilder: (_, __) => Divider(), 
+      itemBuilder: (context, index) {
+        final post = posts[index];
+        return _postListTile(post);
+      },
+      separatorBuilder: (context, index) => Divider(),
     );
   }
 
-  ListTile postTile(Post post) => ListTile(
-    title: Text(post.content),
-    subtitle: Text('${post.created.time}'),
-  );
+  ListTile _postListTile(Post post) {
+    return ListTile(
+      title: Text(post.content),
+      subtitle: Text(post.created.time.toString()),
+    );
+  }
 }
 
 extension Time on int {
 
   DateTime get time => DateTime.fromMillisecondsSinceEpoch(this);
 }
-
