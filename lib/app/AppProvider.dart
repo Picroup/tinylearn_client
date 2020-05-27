@@ -1,7 +1,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:tinylearn_client/app/AppViewModel.dart';
+import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/app/Configuration.dart';
 import 'package:tinylearn_client/functional/graphql/ModelRequest.dart';
 import 'package:tinylearn_client/functional/graphql/createModelRequest.dart';
@@ -44,14 +44,14 @@ class AppProvider extends StatelessWidget {
             return GraphQLUserService(modelRequest);
           }
         ),
-        ChangeNotifierProvider<AppViewModel>(
+        ChangeNotifierProvider<AppNotifier>(
           create: (context) {
             final MiniStorage storage = context.read();
-            final AppViewModel appViewModel = AppViewModel(
+            final AppNotifier appNotifier = AppNotifier(
               getSessionInfo: ()  => storage.sessionInfo,
               setSessionInfo: (value) => storage.setSessionInfo(value),
-            )..initSessionInfo();
-            return appViewModel;
+            );
+            return appNotifier;
           }
         ),
       ],

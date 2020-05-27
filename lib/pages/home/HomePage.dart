@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/functional/graphql/errorMessage.dart';
-import 'package:tinylearn_client/functional/fundation/int_time.dart';
+import 'package:tinylearn_client/functional/foundation/int_time.dart';
 import 'package:tinylearn_client/functional/networking/PostService/PostService.dart';
 import 'package:tinylearn_client/models/Post.dart';
 import 'package:tinylearn_client/models/PostsData.dart';

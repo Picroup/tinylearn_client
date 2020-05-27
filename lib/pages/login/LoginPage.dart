@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/app/Configuration.dart';
+import 'package:tinylearn_client/functional/networking/UserService/UserService.dart';
 import 'package:tinylearn_client/widgets/AccentButton.dart';
+
+import 'LoginNotifier.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,71 +26,86 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
-  void _onGetCodePressed(BuildContext context) async {
-    print('_onGetCodePressed');
-
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text('验证码发送成功！'),
-    ));
-
-    _codeEditingController.clear();
-    _codeFocusNode.requestFocus();
-
-    final Configuration configuration = context.read();
-    final LoginViewModel loginViewModel = context.read();
-    final totalSeconds = configuration.codeCountDownSeconds;
-    loginViewModel.setRemainSeconds(totalSeconds);
-    final counts = Stream.periodic(Duration(seconds: 1), (index) => index + 1).take(totalSeconds);
-    await for (var passed in counts) {
-      loginViewModel.setRemainSeconds(totalSeconds - passed);
-    }
-  }
-
-  void _onLoginPressed(BuildContext context) async {
-    print('_onLoginPressed');
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<LoginViewModel>(
-      create: (_) => LoginViewModel(),
+    return ChangeNotifierProvider<LoginNotifier>(
+      create: (context) => LoginNotifier(
+        appNotifier: context.read<AppNotifier>(),
+        userService: context.read<UserService>(),
+        codeCountDownSeconds: context.read<Configuration>().codeCountDownSeconds
+      ),
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ),
         body: _buildBody(),
       ),
     );
   }
-
+  
 
   Widget _buildBody() {
    return Builder(builder: (context) {
-      final LoginViewModel loginViewModel = context.watch();
-
-      return Center(
-        child: SizedBox(
-          width: 250,
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: 196),
-              _phoneTextField(onChanged: loginViewModel.setPhone),
-              _codeWidget(
-                getCodeButtonText: loginViewModel.getCodeText,
-                onCodeChanged: loginViewModel.setCode,
-                onGetCodePressed: !loginViewModel.isGetCodeEnable
-                  ? null
-                  : () => this._onGetCodePressed(context)
+      final LoginNotifier loginNotifier = context.watch();
+      
+      return React(
+        listenable: loginNotifier,
+        select: (LoginNotifier listenable) => listenable.getCodeSuccessVersion,
+        onTigger: (value) {
+          _codeEditingController.clear();
+          _codeFocusNode.requestFocus();
+        },
+        child: React(
+          listenable: loginNotifier,
+          select: (LoginNotifier listenable) => listenable.loginSuccessVersion,
+          onTigger: (value) async {
+            await Future.delayed(Duration(seconds: 2));
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+          },
+          child: React(
+            listenable: loginNotifier,
+            select: (LoginNotifier listenable) => listenable.message,
+            areEqual: (previous, current) => identical(previous, current),
+            onTigger: (message) => Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text(message))),
+            child: Container(
+              child: Center(
+                child: SizedBox(
+                  width: 250,
+                  child: _buildListView(loginNotifier)
+                ),
               ),
-              SizedBox(height: 24),
-              _loginButton(
-                isLoading: loginViewModel.isLoading, 
-                onPressed: !loginViewModel.isLoginEnable
-                  ? null
-                  : () => this._onLoginPressed(context)
-              ),
-            ],
-          )
+            ),
+          ),
         ),
       );
    });
+  }
+
+  ListView _buildListView(LoginNotifier loginNotifier) {
+    return ListView(
+      children: <Widget>[
+        SizedBox(height: 128),
+        _phoneTextField(onChanged: loginNotifier.setPhone),
+        _codeWidget(
+          getCodeButtonText: loginNotifier.getCodeText,
+          onCodeChanged: loginNotifier.setCode,
+          onGetCodePressed: !loginNotifier.isGetCodeEnable
+            ? null
+            : loginNotifier.onTriggerGetCode
+        ),
+        SizedBox(height: 24),
+        _loginButton(
+          isLoading: loginNotifier.isLoading, 
+          onPressed: !loginNotifier.isLoginEnable
+            ? null
+            : loginNotifier.onTiggerLogin
+        ),
+      ],
+    );
   }
 
   Widget _phoneTextField({ValueChanged<String> onChanged}) {
@@ -96,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         icon: Icon(Icons.phone_android),
-        labelText: '手机',
+        labelText: '手机号',
         border: InputBorder.none,
         counterText: '',
       ),
@@ -154,59 +173,81 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
     return AccentButton(
-      child: Text('登录'),
+      child: Text('登录或注册'),
       onPressed: onPressed,
     );
   }
 
 }
 
-class LoginViewModel extends ChangeNotifier {
-  
-  // states
-  String phone = '';
-  String code = '';
-  bool isLoading = false;
 
-  bool isGettingCode = false;
-  int remainSeconds = 0;
+class React<L extends Listenable, T> extends StatefulWidget {
 
-  bool get isLoginEnable => phone.length >= 11
-      && code.length >= 6
-      && !isLoading;
+  final L listenable;
+  final T Function(L listenable) select;
+  final bool Function(T previous, T current) areEqual;
+  final ValueChanged<T> onTigger;
+  final Widget child;
 
-  bool get isCountingDown => remainSeconds > 0;
+  const React({
+    Key key, 
+    @required this.listenable,
+    this.areEqual,
+    @required this.select,
+    @required this.onTigger,
+    @required this.child
+  }) :
+    assert(listenable != null),
+    assert(select != null),
+    assert(onTigger != null),
+    assert(child != null),
+    super(key: key);
 
-  bool get isGetCodeEnable => phone.length >= 11
-    && !isCountingDown
-    && !isGettingCode;
+  @override
+  _ReactState<L, T> createState() => _ReactState<L, T>();
+}
 
-  String get getCodeText => remainSeconds == 0
-    ? '获取验证码'
-    : '重新获取($remainSeconds)';
+class _ReactState<L extends Listenable, T> extends State<React<L, T>> {
 
-  void setIsGettingCode(bool value) {
-    isGettingCode = value;
-    notifyListeners();
+  T _value;
+  VoidCallback _listener;
+
+  @override
+  void initState() {
+
+    final _listenable = widget.listenable;
+
+    _listener = () {
+      final newValue = widget.select(_listenable);
+      if (_value == null && newValue == null) {
+
+      } else if (_value == null && newValue != null) {
+        _value = newValue;
+        widget.onTigger(newValue);
+      } else if (_value != null && newValue == null) {
+        _value = newValue;
+      } else if (_value != null && newValue != null) {
+        final areValuesEqual = widget.areEqual != null
+          ? widget.areEqual(_value, newValue)
+          : _value == newValue;
+        if (!areValuesEqual) {
+          _value = newValue;
+          widget.onTigger(newValue);
+        }
+      }
+    };
+    
+    _listenable.addListener(_listener);
+
+    super.initState();
   }
 
-  void setRemainSeconds(int value) {
-    remainSeconds = value;
-    notifyListeners();
-  }
-  
-  void setPhone(String value) {
-    phone = value;
-    notifyListeners();
-  }
-  
-  void setCode(String value) {
-    code = value;
-    notifyListeners();
+  @override
+  dispose() {
+    widget.listenable.removeListener(_listener);
+    super.dispose();
   }
 
-  void setIsLoading(bool value) {
-    isLoading = value;
-    notifyListeners();
-  }
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

@@ -2,6 +2,7 @@
 
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tinylearn_client/functional/graphql/ModelRequest.dart';
+import 'package:tinylearn_client/functional/networking/UserService/types/GetVerifyCodeInput.dart';
 import 'package:tinylearn_client/models/LoginOrRegisterData.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/LoginOrRegisterInput.dart';
 import 'UserService.dart';
@@ -34,5 +35,20 @@ class GraphQLUserService extends UserService {
       parse: (data) => LoginOrRegisterData.fromMap(data)
     );
   }
-  
+
+  @override
+  Future<String> getVerifyCode(GetVerifyCodeInput input) async {
+    return await this._modelRequest.mutate(
+      options: MutationOptions(
+        documentNode: gql(r'''
+          mutation GetVerifyCode($phone: String!) {
+            getVerifyCode(phone: $phone)
+          }
+        '''),
+        fetchPolicy: FetchPolicy.networkOnly,
+        variables: input.toMap()
+      ),
+      parse: (data) => data['getVerifyCode']
+    );
+  }
 }

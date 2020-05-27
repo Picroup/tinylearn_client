@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinylearn_client/app/AppViewModel.dart';
+import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/pages/home/HomePage.dart';
 import 'package:tinylearn_client/pages/login/LoginPage.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +40,7 @@ class _TabState extends State<TabPage> {
 
   void _onTapTab(int index) {
     final item = _items[index];
-    final AppViewModel appViewModel = context.read();
+    final AppNotifier appViewModel = context.read();
     if (!appViewModel.isLogin && item.key != 'search') {
       this._routeToLogin();
       return;
@@ -99,7 +99,7 @@ class _TabState extends State<TabPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isSessionInfoInit = context.select<AppViewModel, bool>((viewModel) => viewModel.isSessionInfoInit);
+    final isSessionInfoInit = context.select<AppNotifier, bool>((viewModel) => viewModel.isSessionInfoInit);
     if (!isSessionInfoInit) return Container(color: Theme.of(context).scaffoldBackgroundColor);
     return Scaffold(
       body: PageView(

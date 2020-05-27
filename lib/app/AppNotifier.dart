@@ -4,13 +4,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:tinylearn_client/models/SessionInfo.dart';
 
-class AppViewModel extends ChangeNotifier {
+class AppNotifier extends ChangeNotifier {
 
   // dependency
   final Future<SessionInfo> Function() getSessionInfo;
   final Future<bool> Function(SessionInfo) setSessionInfo;
 
-  AppViewModel({this.getSessionInfo, this.setSessionInfo});
+  AppNotifier({this.getSessionInfo, this.setSessionInfo}) {
+    initSessionInfo();
+  }
 
   // states
   SessionInfo sessionInfo;
@@ -24,16 +26,24 @@ class AppViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onGetSessionInfo(SessionInfo sessionInfo) async {
+  void onUpdateSessionInfo(SessionInfo sessionInfo) async {
     this.sessionInfo = sessionInfo;
     notifyListeners();
-    await setSessionInfo(sessionInfo);
+    try {
+      await setSessionInfo(sessionInfo);
+    } catch (error) {
+      print('$error');
+    }
   }
 
   void onClearSessionInfo() async {
     this.sessionInfo = null;
     notifyListeners();
-    await setSessionInfo(null);
+    try {
+       await setSessionInfo(null);
+    } catch (error) {
+      print('$error');
+    }
   }
 
 }
