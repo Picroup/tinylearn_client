@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/functional/foundation/SilenceChangeNotifier.dart';
+import 'package:tinylearn_client/functional/graphql/errorMessage.dart';
 import 'package:tinylearn_client/functional/networking/UserService/UserService.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/GetVerifyCodeInput.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/LoginOrRegisterInput.dart';
@@ -75,7 +76,7 @@ class LoginNotifier extends SilenceChangeNotifier {
 
     } catch (error) {
       isGettingCode = false;
-      message = '$error';
+      message = errorMessage(error);
       print(message);
       notifyListeners();
     }
@@ -101,7 +102,7 @@ class LoginNotifier extends SilenceChangeNotifier {
       appNotifier.onUpdateSessionInfo(sessionInfo);
     } catch (error) {
       isLoading = false;
-      message = '$error';
+      message = errorMessage(error);
       print(message);
       notifyListeners();
     }
