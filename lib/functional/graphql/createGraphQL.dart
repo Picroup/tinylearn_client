@@ -2,9 +2,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'ModelRequest.dart';
+import 'GraphQL.dart';
 
-ModelRequest createModelRequest({ 
+GraphQL createGraphQL({ 
   @required String uri,
   @required GetToken getToken,
 }) {
@@ -30,5 +30,5 @@ ModelRequest createModelRequest({
     link: link,
   );
   
-  return ModelRequest(_client);
+  return GraphQL(_client);
 }

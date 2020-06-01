@@ -1,7 +1,8 @@
 
 
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:tinylearn_client/functional/graphql/ModelRequest.dart';
+import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
+import 'package:tinylearn_client/functional/graphql_fragments/userFragment.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/GetVerifyCodeInput.dart';
 import 'package:tinylearn_client/models/LoginOrRegisterData.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/LoginOrRegisterInput.dart';
@@ -9,23 +10,18 @@ import 'UserService.dart';
 
 class GraphQLUserService extends UserService {
 
-  final ModelRequest _modelRequest;
+  final GraphQL _graphQL;
 
-  GraphQLUserService(this._modelRequest);
+  GraphQLUserService(this._graphQL);
 
   @override
   Future<LoginOrRegisterData> loginOrRegister(LoginOrRegisterInput input) async {
-    return await this._modelRequest.mutate(
+    return await this._graphQL.mutate(
       options: MutationOptions(
-        documentNode: gql(r'''
-          mutation LoginOrRegister($phone: String!, $code: String!) {
-            loginOrRegister(phone: $phone, code: $code) {
-              token
-              user {
-                id
-                username
-                created
-              }
+        documentNode: gql('''
+          mutation LoginOrRegister(\$phone: String!, \$code: String!) {
+            loginOrRegister(phone: \$phone, code: \$code) {
+              $sessionInfoFragment
             }
           }
         '''),
@@ -38,7 +34,7 @@ class GraphQLUserService extends UserService {
 
   @override
   Future<String> getVerifyCode(GetVerifyCodeInput input) async {
-    return await this._modelRequest.mutate(
+    return await this._graphQL.mutate(
       options: MutationOptions(
         documentNode: gql(r'''
           mutation GetVerifyCode($phone: String!) {

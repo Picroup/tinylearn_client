@@ -2,11 +2,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class ModelRequest {
+class GraphQL {
 
   final GraphQLClient _client;
 
-  ModelRequest(this._client);
+  GraphQL(this._client);
 
   Future<Model> query<Model>({
     @required QueryOptions options,

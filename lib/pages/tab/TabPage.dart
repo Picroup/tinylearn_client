@@ -3,6 +3,7 @@ import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/pages/home/HomePage.dart';
 import 'package:tinylearn_client/pages/login/LoginPage.dart';
 import 'package:provider/provider.dart';
+import 'package:tinylearn_client/pages/search/SearchPage.dart';
 
 class TabPage extends StatefulWidget {
 
@@ -72,7 +73,7 @@ class _TabState extends State<TabPage> {
       ),
       _Item(
         key: 'search',
-        widget: Container(color: Colors.green),
+        widget: SearchPage(), 
         barItem: BottomNavigationBarItem(
           icon: Icon(Icons.search),
           title: Text('搜索'),

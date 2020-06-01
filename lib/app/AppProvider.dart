@@ -3,10 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/app/Configuration.dart';
-import 'package:tinylearn_client/functional/graphql/ModelRequest.dart';
-import 'package:tinylearn_client/functional/graphql/createModelRequest.dart';
+import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
+import 'package:tinylearn_client/functional/graphql/createGraphQL.dart';
 import 'package:tinylearn_client/functional/networking/PostService/GraphQLPostService.dart';
 import 'package:tinylearn_client/functional/networking/PostService/PostService.dart';
+import 'package:tinylearn_client/functional/networking/TagService/TagService.dart';
 import 'package:tinylearn_client/functional/networking/UserService/GraphQLUserService.dart';
 import 'package:tinylearn_client/functional/networking/UserService/UserService.dart';
 import 'package:tinylearn_client/functional/storage/MiniStorage.dart';
@@ -22,11 +23,11 @@ class AppProvider extends StatelessWidget {
       providers: [
         Provider<Configuration>.value(value: configuration),
         Provider<MiniStorage>(create: (context) => MiniStorage()),
-        Provider<ModelRequest>(
+        Provider<GraphQL>(
           create: (context) {
             final Configuration config = context.read();
             final MiniStorage miniStorage = context.read();
-            return createModelRequest(
+            return createGraphQL(
               uri: config.uri,
               getToken: () => miniStorage.token,
             );
@@ -34,14 +35,20 @@ class AppProvider extends StatelessWidget {
         ),
         Provider<PostService>(
           create: (context) {
-            final ModelRequest modelRequest = context.read();
-            return GraphQLPostService(modelRequest);
+            final GraphQL graphQL = context.read();
+            return GraphQLPostService(graphQL);
           }
         ),
         Provider<UserService>(
           create: (context) {
-            final ModelRequest modelRequest = context.read();
-            return GraphQLUserService(modelRequest);
+            final GraphQL graphQL = context.read();
+            return GraphQLUserService(graphQL);
+          }
+        ),
+        Provider<TagService>(
+          create: (context) {
+            final GraphQL graphQL = context.read();
+            return TagService(graphQL);
           }
         ),
         ChangeNotifierProvider<AppNotifier>(
