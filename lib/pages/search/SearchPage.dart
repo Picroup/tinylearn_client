@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/functional/foundation/SilenceChangeNotifier.dart';
 import 'package:tinylearn_client/functional/networking/TagService/TagService.dart';
-import 'package:tinylearn_client/functional/networking/TagService/types/TagPostsInput.dart';
 import 'package:tinylearn_client/functional/networking/TagService/types/TagsInput.dart';
-import 'package:tinylearn_client/models/CursorPosts.dart';
 import 'package:tinylearn_client/models/CursorTags.dart';
-import 'package:tinylearn_client/models/Tag.dart';
 import 'package:tinylearn_client/pages/tagposts/TagPostsPage.dart';
 
 class SearchPage extends StatefulWidget {
@@ -39,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
                 unselectedLabelColor: Colors.grey,
                 labelStyle: Theme.of(context).textTheme.headline6,
                 tabs: value.cursorTags.items
-                  .map((item) => Tab(text: item.name))
+                  .map((item) => Tab(text: item.name == '#__all' ? '#全部' : item.name))
                   .toList(),
               ),
             ),

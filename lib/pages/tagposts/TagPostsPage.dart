@@ -5,6 +5,7 @@ import 'package:tinylearn_client/functional/foundation/SilenceChangeNotifier.dar
 import 'package:tinylearn_client/functional/networking/TagService/TagService.dart';
 import 'package:tinylearn_client/functional/networking/TagService/types/TagPostsInput.dart';
 import 'package:tinylearn_client/models/CursorPosts.dart';
+import 'package:tinylearn_client/models/Post.dart';
 import 'package:tinylearn_client/models/Tag.dart';
 import 'package:tinylearn_client/widgets/Spinner.dart';
 
@@ -35,7 +36,7 @@ class _TagPostsPageState extends State<TagPostsPage> with AutomaticKeepAliveClie
           final TagPostsNotifier tagPostsNotifier = context.watch();
           return NotificationListener<ScrollNotification>(
             onNotification: (notification) {
-              if (notification.metrics.maxScrollExtent - notification.metrics.pixels <= 0) {
+              if (notification.metrics.maxScrollExtent - notification.metrics.pixels <= 200) {
                 tagPostsNotifier.onTiggerGetTagPosts();
               }
               return false;
@@ -44,10 +45,10 @@ class _TagPostsPageState extends State<TagPostsPage> with AutomaticKeepAliveClie
               itemCount: tagPostsNotifier.postsLength + 1,
               itemBuilder: (context, index) {
                 if (index == tagPostsNotifier.postsLength) {
-                  return Spinner();
+                  return tagPostsNotifier.hasNoMoreData ? Container() : Spinner();
                 }
                 final post = tagPostsNotifier.tag.posts.items[index];
-                return ListTile(title: Text(post.content, maxLines: 5)); 
+                return _buildPostListTile(context, post); 
               }, 
               separatorBuilder: (BuildContext context, int index) => Divider(),
             ),
@@ -56,6 +57,14 @@ class _TagPostsPageState extends State<TagPostsPage> with AutomaticKeepAliveClie
       ),
     );
   }
+
+  ListTile _buildPostListTile(BuildContext context, Post post) => ListTile(
+    leading: CircleAvatar(
+      backgroundImage: NetworkImage(post.user?.imageUrl ?? ""),
+    ),
+    title: Text('@${post.user?.username ?? ""}', style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.bold)),
+    subtitle: Text(post.content, maxLines: 5, style: Theme.of(context).textTheme.bodyText1)
+  );
 }
 
 
@@ -69,6 +78,10 @@ class TagPostsNotifier extends SilenceChangeNotifier {
   bool isGettingTagPosts = false;
   Tag tag;
   dynamic getTagPostsError;
+  bool get hasNoMoreData => !isGettingTagPosts 
+    && getTagPostsError == null
+    && tag != null
+    && tag.posts.cursor == null;
 
   int get postsLength => tag?.posts?.items?.length ?? 0;
   
@@ -77,8 +90,9 @@ class TagPostsNotifier extends SilenceChangeNotifier {
   }
 
   onTiggerGetTagPosts() async {
-    if (isGettingTagPosts) return;
+    if (isGettingTagPosts || hasNoMoreData) return;
     isGettingTagPosts = true;
+    getTagPostsError = null;
     notifyListeners();
 
     try {
