@@ -1,6 +1,7 @@
 
 
-import 'package:tinylearn_client/models/PostsData.dart';
+
+import 'types/PostsData.dart';
 
 abstract class PostService {
 

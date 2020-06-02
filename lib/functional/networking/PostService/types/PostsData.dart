@@ -1,7 +1,8 @@
 
 import 'dart:convert';
 
-import 'Post.dart';
+import 'package:tinylearn_client/models/Post.dart';
+
 
 class PostsData {
     final List<Post> posts;

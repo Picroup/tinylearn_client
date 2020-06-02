@@ -1,8 +1,8 @@
 
 
-import 'package:tinylearn_client/models/PostsData.dart';
 
 import 'PostService.dart';
+import 'types/PostsData.dart';
 
 class FakePostService extends PostService {
 

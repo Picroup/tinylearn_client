@@ -1,9 +1,9 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
 import 'package:tinylearn_client/functional/graphql_fragments/postFragment.dart';
-import 'package:tinylearn_client/models/PostsData.dart';
 
 import 'PostService.dart';
+import 'types/PostsData.dart';
 
 class GraphQLPostService extends PostService {
 

@@ -1,7 +1,8 @@
 
 import 'dart:convert';
 
-import 'SessionInfo.dart';
+import 'package:tinylearn_client/models/SessionInfo.dart';
+
 
 class LoginOrRegisterData {
     final SessionInfo loginOrRegister;

@@ -4,3 +4,10 @@ final postBasicFragment = '''
   created
   content
 ''';
+
+final cursorPostsFragment = '''
+  cursor
+  items {
+    $postBasicFragment
+  }
+''';

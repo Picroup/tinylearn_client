@@ -4,9 +4,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
 import 'package:tinylearn_client/functional/graphql_fragments/userFragment.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/GetVerifyCodeInput.dart';
-import 'package:tinylearn_client/models/LoginOrRegisterData.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/LoginOrRegisterInput.dart';
 import 'UserService.dart';
+import 'types/LoginOrRegisterData.dart';
 
 class GraphQLUserService extends UserService {
 

@@ -3,7 +3,8 @@
 //     final tagsData = tagsDataFromJson(jsonString);
 
 import 'dart:convert';
-import 'CursorTags.dart';
+
+import 'package:tinylearn_client/models/CursorTags.dart';
 
 
 class TagsData {

@@ -1,18 +1,35 @@
 
 import 'dart:convert';
 
+import 'package:tinylearn_client/models/CursorPosts.dart';
+
 import 'User.dart';
 
 class Tag {
     final String name;
     final String kind;
     final User user;
+    final CursorPosts posts;
 
     Tag({
         this.name,
         this.kind,
         this.user,
+        this.posts,
     });
+    
+    Tag copyWith({
+        String name,
+        String kind,
+        User user,
+        CursorPosts posts,
+    }) => 
+        Tag(
+            name: name ?? this.name,
+            kind: kind ?? this.kind,
+            user: user ?? this.user,
+            posts: posts ?? this.posts,
+        );
 
     factory Tag.fromJson(String str) => Tag.fromMap(json.decode(str));
 
@@ -22,11 +39,13 @@ class Tag {
         name: json["name"] == null ? null : json["name"],
         kind: json["kind"] == null ? null : json["kind"],
         user: json["user"] == null ? null : User.fromMap(json["user"]),
+        posts: json["posts"] == null ? null : CursorPosts.fromMap(json["posts"]),
     );
 
     Map<String, dynamic> toMap() => {
         "name": name == null ? null : name,
         "kind": kind == null ? null : kind,
         "user": user == null ? null : user.toMap(),
+        "posts": posts == null ? null : posts.toMap(),
     };
 }
