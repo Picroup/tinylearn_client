@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tinylearn_client/app/AppProvider.dart';
 
 import 'pages/tab/TabPage.dart';
 
 void main() {
+  Intl.defaultLocale = 'zh';
   runApp(MyApp());
 }
 
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: TabPage()
+        home: TabPage(),
         // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
