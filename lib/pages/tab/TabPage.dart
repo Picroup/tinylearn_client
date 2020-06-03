@@ -65,7 +65,7 @@ class _TabState extends State<TabPage> {
     return [
       _Item(
         key: 'home',
-        widget: HomePage(title: '首页'),
+        widget: HomePage(),
         barItem: BottomNavigationBarItem(
           icon: Icon(Icons.home),
           title: Text('首页'),

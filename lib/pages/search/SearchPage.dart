@@ -28,7 +28,7 @@ class _SearchPageState extends State<SearchPage> {
           length: value.cursorTags.items.length,
           child: Scaffold(
             appBar: AppBar(
-              title: Text('搜索'),
+              title: Text('搜索', style: Theme.of(context).textTheme.headline5),
               bottom: TabBar(
                 isScrollable: true,
                 labelColor: Theme.of(context).accentColor,

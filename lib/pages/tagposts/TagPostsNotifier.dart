@@ -20,8 +20,6 @@ class TagPostsNotifier extends SilenceChangeNotifier {
     && tag != null
     && tag.posts.cursor == null;
 
-  int get postsLength => tag?.posts?.items?.length ?? 0;
-  
   TagPostsNotifier({this.tagService, this.tagName}) {
     onTiggerGetTagPosts();
   }
