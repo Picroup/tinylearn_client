@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:tinylearn_client/functional/graphql/errorMessage.dart';
 import 'package:tinylearn_client/functional/foundation/int_time.dart';
 import 'package:tinylearn_client/functional/networking/PostService/PostService.dart';
-import 'package:tinylearn_client/functional/networking/PostService/types/PostsData.dart';
 import 'package:tinylearn_client/models/Post.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,28 +36,29 @@ class _HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     return Consumer<PostService>(
       builder: (context, _postService, child) => 
         Center(
-          child: futureBuilder(_postService),
+          child: Container(),
+          // child: futureBuilder(_postService),
         ),
     );
   }
 
-  FutureBuilder<PostsData> futureBuilder(PostService _postService) {
-    return FutureBuilder<PostsData>(
-      future: _postService.posts(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final posts = snapshot.data.posts;
-          return ListView(
-            children: posts.map(_postListTile).toList(),
-          );
-        }
-        if (snapshot.hasError) {
-          return Text(errorMessage(snapshot.error));
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
+  // FutureBuilder<PostsData> futureBuilder(PostService _postService) {
+  //   return FutureBuilder<PostsData>(
+  //     future: _postService.posts(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         final posts = snapshot.data.posts;
+  //         return ListView(
+  //           children: posts.map(_postListTile).toList(),
+  //         );
+  //       }
+  //       if (snapshot.hasError) {
+  //         return Text(errorMessage(snapshot.error));
+  //       }
+  //       return CircularProgressIndicator();
+  //     },
+  //   );
+  // }
 
   Widget _postListTile(Post post) {
     return ListTile(

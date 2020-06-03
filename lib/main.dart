@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:tinylearn_client/app/AppProvider.dart';
 
@@ -6,6 +7,7 @@ import 'pages/tab/TabPage.dart';
 
 void main() {
   Intl.defaultLocale = 'zh';
+  initializeDateFormatting('zh');
   runApp(MyApp());
 }
 

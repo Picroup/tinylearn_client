@@ -5,7 +5,6 @@ import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/app/Configuration.dart';
 import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
 import 'package:tinylearn_client/functional/graphql/createGraphQL.dart';
-import 'package:tinylearn_client/functional/networking/PostService/GraphQLPostService.dart';
 import 'package:tinylearn_client/functional/networking/PostService/PostService.dart';
 import 'package:tinylearn_client/functional/networking/TagService/TagService.dart';
 import 'package:tinylearn_client/functional/networking/UserService/GraphQLUserService.dart';
@@ -36,7 +35,7 @@ class AppProvider extends StatelessWidget {
         Provider<PostService>(
           create: (context) {
             final GraphQL graphQL = context.read();
-            return GraphQLPostService(graphQL);
+            return PostService(graphQL);
           }
         ),
         Provider<UserService>(
