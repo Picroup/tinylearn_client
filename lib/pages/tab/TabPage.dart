@@ -3,7 +3,9 @@ import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:tinylearn_client/pages/home/HomePage.dart';
 import 'package:tinylearn_client/pages/login/LoginPage.dart';
 import 'package:provider/provider.dart';
+import 'package:tinylearn_client/pages/me/MePage.dart';
 import 'package:tinylearn_client/pages/search/SearchPage.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class TabPage extends StatefulWidget {
 
@@ -31,6 +33,8 @@ class _TabState extends State<TabPage> {
 
   @override
   void initState() {
+    initializeDateFormatting('zh');
+    
     _currentIndex = 1;
     _pageController = PageController(
       initialPage: _currentIndex,
@@ -89,7 +93,7 @@ class _TabState extends State<TabPage> {
       ),
       _Item(
         key: 'me',
-        widget: Container(color: Colors.lime),
+        widget: MePage(),
         barItem: BottomNavigationBarItem(
             icon: Icon(Icons.person),
             title: Text('我的'),

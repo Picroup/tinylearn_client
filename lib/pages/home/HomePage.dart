@@ -35,9 +35,7 @@ class _HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
               foregroundColor: Colors.white,
-              onPressed: () {
-                
-              },
+              onPressed: () { },
             ),
           );
         }

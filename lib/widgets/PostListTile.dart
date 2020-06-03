@@ -13,15 +13,19 @@ class PostListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(width: 8),
-        _buildAvatar(post),
-        SizedBox(width: 8),
-        Expanded(child: _buildPostBody(post, context),),
-        SizedBox(width: 16),
-      ],
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 8),
+          _buildAvatar(post),
+          SizedBox(width: 8),
+          Expanded(child: _buildPostBody(post, context),),
+          SizedBox(width: 16),
+        ],
+      ),
     );
   }
 

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:tinylearn_client/app/AppProvider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'pages/tab/TabPage.dart';
 
 void main() {
   Intl.defaultLocale = 'zh';
-  initializeDateFormatting('zh');
   runApp(MyApp());
 }
 
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppProvider(
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: '小小学',
         theme: ThemeData(
           primarySwatch: Colors.orange,
           appBarTheme: AppBarTheme(
@@ -24,8 +23,14 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale.fromSubtags(languageCode: 'zh'), 
+        ],
         home: TabPage(),
-        // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }

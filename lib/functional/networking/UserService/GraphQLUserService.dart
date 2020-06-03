@@ -20,7 +20,7 @@ class GraphQLUserService extends UserService {
       options: MutationOptions(
         documentNode: gql('''
           mutation LoginOrRegister(\$phone: String!, \$code: String!) {
-            loginOrRegister(phone: \$phone, code: \$code) {
+            loginOrRegister(input: { phone: \$phone, code: \$code }) {
               $sessionInfoFragment
             }
           }
@@ -38,7 +38,7 @@ class GraphQLUserService extends UserService {
       options: MutationOptions(
         documentNode: gql(r'''
           mutation GetVerifyCode($phone: String!) {
-            getVerifyCode(phone: $phone)
+            getVerifyCode(input: { phone: $phone })
           }
         '''),
         fetchPolicy: FetchPolicy.networkOnly,

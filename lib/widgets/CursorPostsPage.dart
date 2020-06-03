@@ -25,8 +25,8 @@ class CursorPostsPage extends StatelessWidget {
         }
         return false;
       },
-      child: ListView.separated(
-        padding: const EdgeInsets.only(top: 16),
+      child: ListView.builder(
+        // padding: const EdgeInsets.only(top: 16),
         itemCount: postsLength + 1,
         itemBuilder: (context, index) {
           if (index == postsLength) {
@@ -35,7 +35,7 @@ class CursorPostsPage extends StatelessWidget {
           final post = posts[index];
           return PostListTile(post: post); 
         }, 
-        separatorBuilder: (BuildContext context, int index) => Divider(),
+        // separatorBuilder: (BuildContext context, int index) => Container(color: Colors.white, height: 16),
       ),
     );
   }
