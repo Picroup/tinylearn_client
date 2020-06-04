@@ -5,6 +5,7 @@ import 'package:package_info/package_info.dart';
 import 'package:tinylearn_client/app/AppNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/models/User.dart';
+import 'package:tinylearn_client/widgets/MyCircleAvatar.dart';
 
 class MePage extends StatefulWidget {
 
@@ -37,9 +38,7 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(user?.imageUrl ?? ''),
-              ),
+              leading: MyCircleAvatar(url: user?.imageUrl),
               title: Text('@${user?.username ?? ''}', style: Theme.of(context).textTheme.headline6,),
               trailing: OutlineButton(
                 child: Text('更新资料', style:  Theme.of(context).textTheme.button,), 

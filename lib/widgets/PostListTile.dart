@@ -5,6 +5,8 @@ import 'package:tinylearn_client/models/Post.dart';
 import 'package:tinylearn_client/functional/foundation/int_time.dart';
 import 'package:tinylearn_client/functional/dateformat/shorttext_time.dart';
 
+import 'MyCircleAvatar.dart';
+
 class PostListTile extends StatelessWidget {
 
   final Post post;
@@ -20,7 +22,7 @@ class PostListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(width: 8),
-          _buildAvatar(post),
+          MyCircleAvatar(url: post.user?.imageUrl),
           SizedBox(width: 8),
           Expanded(child: _buildPostBody(post, context),),
           SizedBox(width: 16),
@@ -58,15 +60,6 @@ class PostListTile extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  CircleAvatar _buildAvatar(Post post) {
-    return CircleAvatar(
-      backgroundImage: CachedNetworkImageProvider(
-        post.user?.imageUrl ?? ""
-      ),
-      backgroundColor: Colors.grey[100],
     );
   }
 
