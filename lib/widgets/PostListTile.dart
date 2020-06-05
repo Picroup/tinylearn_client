@@ -37,6 +37,7 @@ class PostListTile extends StatelessWidget {
 
   Column _buildPostBody(BuildContext context, Post post, MarkdownTapLinkCallback onTapLink) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Row(
           children: <Widget>[

@@ -6,7 +6,6 @@ import 'package:tinylearn_client/functional/networking/PostService/PostService.d
 import 'package:tinylearn_client/functional/networking/PostService/types/CursorInput.dart';
 import 'package:tinylearn_client/functional/networking/PostService/types/TimelineData.dart';
 import 'package:tinylearn_client/models/CursorPosts.dart';
-import 'package:tinylearn_client/pages/createpost/CreatePostPage.dart';
 import 'package:tinylearn_client/widgets/CursorPostsPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,11 +19,6 @@ class _HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  void _routeToCreatePost() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => CreatePostPage(),
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +33,6 @@ class _HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               title: Text("关注", style: Theme.of(context).textTheme.headline5),
             ),
             body: _buildBody(homeNotifier),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.add),
-              foregroundColor: Colors.white,
-              onPressed: _routeToCreatePost,
-            ),
           );
         }
       ),
