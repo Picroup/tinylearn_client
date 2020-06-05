@@ -192,7 +192,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
         child: Column(
           children: <Widget>[
             _buildContent(appNotifier, createPostNotifier),
-            _buildKeyboardBar(context),
+            // _buildKeyboardBar(context),
           ],
         ),
       ));

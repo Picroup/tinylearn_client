@@ -28,12 +28,25 @@ class _SearchPageState extends State<SearchPage> {
           length: value.cursorTags.items.length,
           child: Scaffold(
             appBar: AppBar(
-              title: Text('搜索', style: Theme.of(context).textTheme.headline5),
+              centerTitle: true,
+              title: FlatButton(
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.search),
+                    SizedBox(width: 16),
+                    Expanded(child: Text('搜索', style: Theme.of(context).textTheme.subtitle1,),)
+                  ],
+                ),
+                onPressed: () {
+                  // showSearch
+                },
+              ),
               bottom: TabBar(
                 isScrollable: true,
                 labelColor: Theme.of(context).accentColor,
+                indicatorSize: TabBarIndicatorSize.label,
                 unselectedLabelColor: Colors.grey,
-                labelStyle: Theme.of(context).textTheme.headline6,
+                // labelStyle: Theme.of(context).textTheme.headline6,
                 tabs: value.cursorTags.items
                   .map((item) => Tab(text: item.name == '#__all' ? '#全部' : item.name))
                   .toList(),
