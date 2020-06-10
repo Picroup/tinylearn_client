@@ -5,3 +5,10 @@ final postBasicFragment = '''
   created
   content
 ''';
+
+final postSumBasicFragment = '''
+  id
+  viewsCount
+  upsCount
+  marksCount
+''';

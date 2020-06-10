@@ -3,6 +3,16 @@
 final userBasicFragment = '''
   id
   username
-  created
   imageURL
+''';
+
+final userSumBasicFragment = '''
+  id
+  postsCount
+  viewsCount
+  followsCount
+  followersCount
+  marksCount
+  upsCount
+  upedCount
 ''';

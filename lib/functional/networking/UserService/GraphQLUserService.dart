@@ -24,6 +24,11 @@ class GraphQLUserService extends UserService {
               token
               user {
                 $userBasicFragment
+                hasSetUsername
+                unreadNotificationsCount
+                sum {
+                  $userSumBasicFragment
+                } 
               }
             }
           }
