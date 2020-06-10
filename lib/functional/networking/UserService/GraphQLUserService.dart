@@ -29,9 +29,9 @@ class GraphQLUserService extends UserService {
               user {
                 $userBasicFragment
                 hasSetUsername
-                unreadNotificationsCount
                 sum {
                   $userSumBasicFragment
+                  unreadNotificationsCount
                 } 
               }
             }
