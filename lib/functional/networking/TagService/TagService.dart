@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
 import 'package:tinylearn_client/functional/graphql_fragments/postFragment.dart';
 import 'package:tinylearn_client/functional/graphql_fragments/tagFragment.dart';
+import 'package:tinylearn_client/functional/graphql_fragments/userFragment.dart';
 import 'package:tinylearn_client/functional/networking/TagService/types/TagPostsData.dart';
 import 'package:tinylearn_client/functional/networking/TagService/types/TagPostsInput.dart';
 import 'package:tinylearn_client/functional/networking/TagService/types/TagsInput.dart';
@@ -21,7 +22,13 @@ class TagService {
         documentNode: gql('''
           query Tags(\$take: Int!, \$cursor: String) {
             tags(input: { take: \$take, cursor: \$cursor }) {
-              $cursorTagsFragment
+              cursor
+              items {
+                $tagBasicFragment
+                user {
+                  $userBasicFragment
+                }
+              }
             }
           }
         '''),
@@ -38,8 +45,17 @@ class TagService {
           query TagPosts(\$tagName: String!, \$take: Int!, \$cursor: String) {
             tag(input: { tagName:  \$tagName}) {
               $tagBasicFragment
+              user {
+                $userBasicFragment
+              } 
               posts(input: { take: \$take, cursor: \$cursor}) {
-                $cursorPostsFragment
+                cursor
+                items {
+                  $postBasicFragment
+                  user {
+                    $userBasicFragment
+                  }
+                }
               }
             }
           }

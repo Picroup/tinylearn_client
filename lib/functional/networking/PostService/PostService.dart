@@ -1,6 +1,7 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tinylearn_client/functional/graphql/GraphQL.dart';
 import 'package:tinylearn_client/functional/graphql_fragments/postFragment.dart';
+import 'package:tinylearn_client/functional/graphql_fragments/userFragment.dart';
 import 'package:tinylearn_client/functional/networking/PostService/types/CreatePostInput.dart';
 import 'package:tinylearn_client/functional/networking/PostService/types/CursorInput.dart';
 import 'package:tinylearn_client/functional/networking/PostService/types/TimelineData.dart';
@@ -18,7 +19,13 @@ class PostService {
         documentNode: gql('''
           query Timeline(\$take: Int!, \$cursor: String){
             timeline(input: { take: \$take, cursor: \$cursor }) {
-              $cursorPostsFragment
+              cursor
+              items {
+                $postBasicFragment
+                user {
+                  $userBasicFragment
+                }
+              }
             }
           }
         '''),

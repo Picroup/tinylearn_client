@@ -21,7 +21,10 @@ class GraphQLUserService extends UserService {
         documentNode: gql('''
           mutation LoginOrRegister(\$phone: String!, \$code: String!) {
             loginOrRegister(input: { phone: \$phone, code: \$code }) {
-              $sessionInfoFragment
+              token
+              user {
+                $userBasicFragment
+              }
             }
           }
         '''),
