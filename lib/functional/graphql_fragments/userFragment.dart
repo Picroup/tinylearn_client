@@ -1,14 +1,18 @@
 
+
 final userBasicFragment = '''
   id
   username
-  created
   imageURL
 ''';
 
-final sessionInfoFragment = '''
-  token
-  user {
-    $userBasicFragment
-  }
+final userSumBasicFragment = '''
+  id
+  postsCount
+  viewsCount
+  followsCount
+  followersCount
+  marksCount
+  upsCount
+  upedCount
 ''';

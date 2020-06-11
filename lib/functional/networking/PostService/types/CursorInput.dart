@@ -6,8 +6,8 @@ import 'dart:convert';
 
 class CursorInput {
     CursorInput({
-        this.take,
-        this.cursor,
+        this.take = 12,
+        this.cursor, 
     });
 
     final int take;

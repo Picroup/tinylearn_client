@@ -1,18 +1,14 @@
 
-import 'userFragment.dart';
 
 final postBasicFragment = '''
   id
   created
   content
-  user {
-    $userBasicFragment
-  }
 ''';
 
-final cursorPostsFragment = '''
-  cursor
-  items {
-    $postBasicFragment
-  }
+final postSumBasicFragment = '''
+  id
+  viewsCount
+  upsCount
+  marksCount
 ''';

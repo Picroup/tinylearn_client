@@ -74,13 +74,13 @@ class _MePageState extends State<MePage> with AutomaticKeepAliveClientMixin {
         ),
         Card(
           child: ListTile(
-            title: Text('点过的赞', style: Theme.of(context).textTheme.headline6),
+            title: Text('点赞', style: Theme.of(context).textTheme.headline6),
             trailing: Text('38', style:  Theme.of(context).textTheme.subtitle1),
           ),
         ),
         Card(
           child: ListTile(
-            title: Text('更多选项', style: Theme.of(context).textTheme.headline6),
+            title: Text('更多', style: Theme.of(context).textTheme.headline6),
             trailing: Icon(Icons.arrow_forward_ios),
             onTap: () => Navigator.push(context, MaterialPageRoute(
               builder: (context) => MeMorePage(),

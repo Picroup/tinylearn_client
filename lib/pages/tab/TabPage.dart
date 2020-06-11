@@ -5,6 +5,7 @@ import 'package:tinylearn_client/pages/home/HomePage.dart';
 import 'package:tinylearn_client/pages/login/LoginPage.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/pages/me/MePage.dart';
+import 'package:tinylearn_client/pages/notification/NotificationsPage.dart';
 import 'package:tinylearn_client/pages/search/SearchPage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -95,7 +96,7 @@ class _TabState extends State<TabPage> {
       ),
       _Item(
         key: 'notifications',
-        widget: Container(color: Colors.amber),
+        widget: NotificationsPage(),
         iconData: Icons.notifications,
       ),
       _Item(
