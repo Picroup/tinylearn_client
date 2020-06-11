@@ -19,10 +19,14 @@ class NotificationsPage extends StatefulWidget {
   _NotificationsPageState createState() => _NotificationsPageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
+class _NotificationsPageState extends State<NotificationsPage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ChangeNotifierProvider(
       create: (context) => NotificationsNotifier(
         userService: context.read()
@@ -91,15 +95,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 'upPost':
         return [
           Text('给你的文章点赞', style: Theme.of(context).textTheme.headline6),
-          SizedBox(
-            height: 64,
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MarkdownBody(data: item.upPostPost?.content, onTapLink: (url) async {
+          Card(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MarkdownBody(data: item.upPostPost?.content, onTapLink: (url) async {
 
-                }),
-              ),
+              }),
             ),
           ),
         ];
@@ -121,6 +123,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         ];
     }
   }
+
 }
 
 extension Fields on noti.Notification {
