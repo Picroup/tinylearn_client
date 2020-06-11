@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 import 'package:tinylearn_client/functional/foundation/SilenceChangeNotifier.dart';
 import 'package:tinylearn_client/functional/graphql/errorMessage.dart';
@@ -7,7 +8,11 @@ import 'package:tinylearn_client/functional/networking/PostService/types/CursorI
 import 'package:tinylearn_client/functional/networking/UserService/UserService.dart';
 import 'package:tinylearn_client/functional/networking/UserService/types/NotificationsData.dart';
 import 'package:tinylearn_client/models/CursorNotifications.dart';
+import 'package:tinylearn_client/models/Notification.dart' as noti;
+import 'package:tinylearn_client/models/User.dart';
 import 'package:tinylearn_client/widgets/Spinner.dart';
+import 'package:tinylearn_client/widgets/UserBasicTile.dart';
+import 'package:tinylearn_client/functional/foundation/int_time.dart';
 
 class NotificationsPage extends StatefulWidget {
   @override
@@ -47,7 +52,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return false;
       },
       child: RefreshIndicator(
-        onRefresh: () async => notificationsNotifier.onTriggerRefreshNotificaions(),
+        onRefresh: () async => notificationsNotifier.onTriggerRefreshNotifications(),
         child: ListView.builder(
           // padding: const EdgeInsets.only(top: 16),
           itemCount: itemsLength + 1,
@@ -56,14 +61,81 @@ class _NotificationsPageState extends State<NotificationsPage> {
               return notificationsNotifier.hasNoMoreData ? Container() : Spinner();
             }
             final item = items[index];
-            return ListTile(
-              title: Text(item.kind),
-            ); 
+            return _buildNotificationItem(context, item, index); 
           }, 
           // separatorBuilder: (BuildContext context, int index) => Container(color: Colors.white, height: 16),
         ),
       ),
     );;
+  }
+
+  Widget _buildNotificationItem(BuildContext context, noti.Notification item, int index) {
+    return Opacity(
+      opacity: index < 2 ? 1.0 : 0.6,
+      // opacity: item.readed ? 0.6 : 1.0,
+      child: UserBasicTile(
+        user: item.user,
+        dateTime: item.created.time,
+        children: _buildNotificationTileChildren(context, item),
+      ),
+    );
+  }
+
+  List<Widget> _buildNotificationTileChildren(BuildContext context, noti.Notification item) {
+    
+    switch (item.kind) {
+      case 'followUser':
+        return [
+          Text('关注了你', style: Theme.of(context).textTheme.headline6),
+        ];
+      case 'upPost':
+        return [
+          Text('给你的文章点赞', style: Theme.of(context).textTheme.headline6),
+          SizedBox(
+            height: 64,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: MarkdownBody(data: item.upPostPost?.content, onTapLink: (url) async {
+
+                }),
+              ),
+            ),
+          ),
+        ];
+      case 'markPost':
+        return [
+          Text('标记了你的文章', style: Theme.of(context).textTheme.headline6),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MarkdownBody(data: item.markPostPost?.content, onTapLink: (url) async {
+
+              }),
+            ),
+          ),
+        ];
+      default:
+        return [
+          Text('未知通知类型，请升级此应用查看', style: Theme.of(context).textTheme.headline6),
+        ];
+    }
+  }
+}
+
+extension Fields on noti.Notification {
+
+  User get user {
+    switch (this.kind) {
+    case 'followUser':
+      return followUserUser;
+    case 'upPost':
+      return upPostUser;
+    case 'markPost':
+      return markPostUser;
+    default:
+      return null;
+  }
   }
 }
 
@@ -84,12 +156,12 @@ class NotificationsNotifier extends SilenceChangeNotifier {
   NotificationsNotifier({
     @required this.userService
   }) {
-    onTriggerRefreshNotificaions();
+    onTriggerRefreshNotifications();
   }
 
-  void onTriggerRefreshNotificaions() async {
-    print('onTriggerRefreshNotificaions');
+  void onTriggerRefreshNotifications() async {
     if (isGettingData) return;
+    print('onTriggerRefreshNotifications');
     data = null;
     error = null;
     notifyListeners();
@@ -123,6 +195,7 @@ class NotificationsNotifier extends SilenceChangeNotifier {
     final newCursorNotifications = _data.notifications;
     if (this.data == null) {
       this.data = _data;
+      _onTriggerMarkAllAsReaded();
     } else {
       this.data = NotificationsData(
         notifications: CursorNotifications(
@@ -133,6 +206,20 @@ class NotificationsNotifier extends SilenceChangeNotifier {
           ]
         )
       );
+    }
+  }
+
+  _onTriggerMarkAllAsReaded() async {
+    if (data != null 
+      && data.notifications.items.isNotEmpty 
+      && !data.notifications.items.first.readed) {
+
+      try {
+        await userService.markAllNotificationsAsRead();  
+        print('markAllNotificationsAsRead success!');
+      } catch (_error) {
+        print(errorMessage(_error));
+      }
     }
   }
 }

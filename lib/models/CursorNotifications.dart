@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:tinylearn_client/models/Notificaion.dart';
+import 'package:tinylearn_client/models/Notification.dart';
 
 class CursorNotifications {
     CursorNotifications({
